@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -29,7 +31,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String toAdd = '';
   int _selectedIndex = 0;
+  bool _isVisible = false;
+  int numberofTextFields = 1;
   
   static const List<Widget> _listoptions = <Widget>[
     Text('Trash')
@@ -42,9 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addToList() {
-
+    
   }
 
+  void _openTask() {
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +61,32 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        margin: EdgeInsets.all(50),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Sample Text',
-            ),
+            TextFormField(
+            decoration: InputDecoration(hintText: 'Input Task'),
+            onChanged: (value) {
+              toAdd = value;
+            },
+          ),
+          SizedBox(height: 20.0,),
+          OutlinedButton(onPressed: () {
+            _isVisible = true;
+            setState(() {
+              numberofTextFields++;
+            });
+          },
+          style: ButtonStyle(foregroundColor: MaterialStatePropertyAll<Color>(Colors.black),
+          backgroundColor: MaterialStatePropertyAll<Color>(Colors.orange)),
+          child: const Icon(Icons.add),
+          ),
+          SizedBox(height: 20.0),
+          for (int i = 0; i < numberofTextFields; i++)
+          OutlinedButton(onPressed: () {  }, 
+          child: Text(toAdd)),
           ],
         ),
       ),
