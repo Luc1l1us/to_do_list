@@ -35,10 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   bool _isVisible = false;
   int numberofTextFields = 1;
-  
-  static const List<Widget> _listoptions = <Widget>[
-    Text('Trash')
-  ];
+
+  static const List<Widget> _listoptions = <Widget>[Text('Trash')];
 
   void _itemTapped(int index) {
     setState(() {
@@ -46,13 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _addToList() {
-    
-  }
+  void _addToList() {}
 
-  void _openTask() {
-
-  }
+  void _openTask() {}
 
   @override
   Widget build(BuildContext context) {
@@ -67,52 +61,63 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             TextFormField(
-            decoration: InputDecoration(hintText: 'Input Task'),
-            onChanged: (value) {
-              toAdd = value;
-            },
-          ),
-          SizedBox(height: 20.0,),
-          OutlinedButton(onPressed: () {
-            _isVisible = true;
-            setState(() {
-              numberofTextFields++;
-            });
-          },
-          style: ButtonStyle(foregroundColor: MaterialStatePropertyAll<Color>(Colors.black),
-          backgroundColor: MaterialStatePropertyAll<Color>(Colors.orange)),
-          child: const Icon(Icons.add),
-          ),
-          SizedBox(height: 20.0),
-          for (int i = 0; i < numberofTextFields; i++)
-          OutlinedButton(onPressed: () {  }, 
-          child: Text(toAdd)),
+              decoration: InputDecoration(hintText: 'Input Task'),
+              onChanged: (value) {
+                toAdd = value;
+              },
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            OutlinedButton(
+              onPressed: () {
+                _isVisible = true;
+                setState(() {
+                  numberofTextFields++;
+                });
+              },
+              style: ButtonStyle(
+                  foregroundColor:
+                      MaterialStatePropertyAll<Color>(Colors.black),
+                  backgroundColor:
+                      MaterialStatePropertyAll<Color>(Colors.orange)),
+              child: const Icon(Icons.add),
+            ),
+            SizedBox(height: 20.0),
+            for (int i = 0; i < numberofTextFields; i++)
+              if (i == 0)
+                OutlinedButton(
+                  onPressed: () {},
+                  child: Text(toAdd),
+                )
+              else
+                SizedBox(height: 10.0),
+            OutlinedButton(
+              onPressed: () {},
+              child: Text(toAdd),
+            ),
           ],
         ),
       ),
-      drawer: Drawer (child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 255, 255, 255)
-            ), child: Text('Menu'),
-          ),
-          ListTile(
-            title: Text('Trash'),
-            selected: _selectedIndex == 0,
-            onTap: () { 
-              _itemTapped(0);
-              Navigator.pop(context);
-            }
-          ),
-        ],
-      ),),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addToList,
-        tooltip: 'Add to-do',
-        child: const Icon(Icons.add),
-      ), 
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration:
+                  BoxDecoration(color: Color.fromARGB(255, 255, 255, 255)),
+              child: Text('Menu'),
+            ),
+            ListTile(
+                title: Text('Trash'),
+                selected: _selectedIndex == 0,
+                onTap: () {
+                  _itemTapped(0);
+                  Navigator.pop(context);
+                }),
+          ],
+        ),
+      ),
     );
   }
 }
