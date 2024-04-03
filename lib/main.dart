@@ -1,9 +1,29 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+Future<void> expressData(String value) async {
+  try {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'value': value}),
+    );
+    if (response.statusCode == 200) {
+      print('Data sent successfully');
+    } else {
+      print('Failed to send data');
+    }
+  } catch (error) {
+    print('Error sending data: $error');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -44,19 +64,31 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _addToList(String value) {
+/*   void _addToList(String value) {
     setState(() {
       _input.add(value);
     });
   }
+ */
 
-  void _openTask(int key) {
+  void _addToList(String value) {
+    setState(() {
+      _input.add(value);
+      expressData(value);
+    });
+  }
+
+  void _delTask(int key) {
     setState((){
       _input.removeAt(key);
     });
   }
 
-
+void _openTask(int key) {
+  setState(() {
+    
+  });
+}
   @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -65,7 +97,7 @@ Widget build(BuildContext context) {
       title: Text(widget.title),
     ),
     body: Container(
-      margin: EdgeInsets.all(50),
+      margin: EdgeInsets.all(100),
       child: Form(key: _key, child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -83,7 +115,9 @@ Widget build(BuildContext context) {
                   children: [
                     ElevatedButton(
                       key: Key('$index'),
-                      onPressed: () {},
+                      onPressed: () {
+                        _openTask(index);
+                      },
                       style: ButtonStyle(
                         minimumSize: MaterialStatePropertyAll(Size(0,0))
                       ),
@@ -95,7 +129,7 @@ Widget build(BuildContext context) {
                           ),
                           IconButton(
                             onPressed: () {
-                              _openTask(index);
+                              _delTask(index);
                             }, 
                             icon: Icon(Icons.delete)) // Button text style
                     ])),
