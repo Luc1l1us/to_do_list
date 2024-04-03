@@ -32,10 +32,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String toAdd = '';
   int _selectedIndex = 0;
-  List<String> _input = [''];
-  bool showTextField = false;
-  String textFieldValue = '';
-  GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final List<String> _input = [''];
+  final TextEditingController _text = TextEditingController();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   static const List<Widget> _listoptions = <Widget>[Text('Trash')];
 
@@ -47,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _addToList(String value) {
     setState(() {
-      showTextField = true;
       _input.add(value);
     });
   }
@@ -72,6 +70,7 @@ Widget build(BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            controller: _text,
             decoration: InputDecoration(hintText: 'Input Task'),
             onFieldSubmitted: _addToList,
           ),
@@ -84,14 +83,22 @@ Widget build(BuildContext context) {
                   children: [
                     ElevatedButton(
                       key: Key('$index'),
-                      onPressed: () {
-                        _openTask(index);
-                      },
-                      child: Text(
-                        buttontext, 
-                        style: TextStyle(fontSize: 16), // Button text style
+                      onPressed: () {},
+                      style: ButtonStyle(
+                        minimumSize: MaterialStatePropertyAll(Size(0,0))
                       ),
-                    ),
+                      child: Row( 
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:[
+                          Flexible(
+                            child:Text(buttontext)
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _openTask(index);
+                            }, 
+                            icon: Icon(Icons.delete)) // Button text style
+                    ])),
                     SizedBox(height: 20.0),
                   ],
                 );
@@ -119,7 +126,7 @@ Widget build(BuildContext context) {
         FloatingActionButton.extended(
           label: Text('Add'),
           onPressed: () {
-            _addToList(_input[0]);
+            _addToList(_text.text);
           },
           icon: Icon(Icons.add),
         ),
