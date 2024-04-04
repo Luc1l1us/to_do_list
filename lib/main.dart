@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
 Future<void> expressData(String value) async {
   try {
     final response = await http.post(
-      Uri.parse('http://localhost:3000'),
+      Uri.parse('http://192.168.68.106:3000'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -74,7 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addToList(String value) {
     setState(() {
       _input.add(value);
-      expressData(value);
+      expressData(value).catchError((error) {
+        print('Error calling expressData" $error');
+      });
     });
   }
 
