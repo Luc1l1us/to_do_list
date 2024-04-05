@@ -8,18 +8,20 @@ void main() {
 }
 
 //Model
-class Book {
-  final int id;
-  final String title;
-  final String author;
+class User {
+  //final int id;
+  //final String title;
+ // final String author;
+ final String tasks;
 
-  Book({required this.id, required this.title, required this.author});
+  User({required this.tasks});
 
-  factory Book.fromJson(Map<String, dynamic> json) {
-    return Book(
-      id: json['id'],
-      title: json['title'],
-      author: json['author'],
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      //id: json['id'],
+      //title: json['title'],
+      //author: json['author'],
+      tasks: json['task'],
     );
   }
 }
@@ -53,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> _input = [''];
   final TextEditingController _text = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  List<Book> _books = [];
+  List<User> _users = [];
 
   static const List<Widget> _listoptions = <Widget>[Text('Trash')];
 
@@ -65,36 +67,39 @@ class _MyHomePageState extends State<MyHomePage> {
     @override
   void initState() {
     super.initState();
-    //sendData();
-    //_fetchBooks();
+    _fetchUsers();
   }
 
     // fetch from server
-    /*
-    Future<void> _fetchBooks() async {
-    final response = await http.get(Uri.http('192.168.68.106:3000', '/api/books'));
+    
+    Future<void> _fetchUsers() async {
+    final response = await http.get(Uri.http('192.168.68.106:3000', '/api/users'));
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
       setState(() {
-      _books = json.map((item) => Book.fromJson(item)).toList();
+      _users = json.map((item) => User.fromJson(item)).toList();
       });
     } else {
       throw Exception('Failed to load books');
     }
-  }*/
+  }
 
+  //send to server
   Future<void> sendData(String value) async {
-    final response = await http.post(Uri.http('192.168.68.106:3000', '/api/books'));
+    final Map<String, dynamic> postData = {
+      'value': value
+    };
+    final response = await http.post(Uri.http('192.168.68.106:3000', '/api/sendvalue'),
     headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body);
-      setState(() {
-      _books = json.map((item) => Book.fromJson(item)).toList();
-      });
+        body: jsonEncode(postData),
+    );
+
+    if (response.statusCode == 201) {
+      print('Data posted successfully');
     } else {
-      throw Exception('Failed to load books');
+      throw Exception('Failed to post values');
     }
   }
 
@@ -124,7 +129,7 @@ Widget build(BuildContext context) {
       title: Text(widget.title),
     ),
     body: 
-    ListView.builder(
+    /*ListView.builder(
         itemCount: _books.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
@@ -133,8 +138,8 @@ Widget build(BuildContext context) {
           );
         },
       ),
-    );
-    /*Container(
+    ); */
+    Container(
       margin: EdgeInsets.all(100),
       child: Form(key: _key, child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -225,6 +230,6 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
-  );*/
+  );
 }
 }

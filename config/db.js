@@ -11,7 +11,7 @@ const client = new MongoClient(uri, {
     }
 })
 
-async function run() {
+/*async function run() {
     try {
         await client.connect();
         const database = client.db('to-do-list');
@@ -29,3 +29,4 @@ async function run() {
     }
 }
 run().catch(console.dir);
+*/
