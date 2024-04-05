@@ -3,26 +3,24 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
-void main() async {
+void main() {
   runApp(const MyApp());
 }
 
-Future<void> expressData(String value) async {
-  try {
-    final response = await http.post(
-      Uri.parse('http://192.168.68.106:3000'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{'value': value}),
+//Model
+class Book {
+  final int id;
+  final String title;
+  final String author;
+
+  Book({required this.id, required this.title, required this.author});
+
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return Book(
+      id: json['id'],
+      title: json['title'],
+      author: json['author'],
     );
-    if (response.statusCode == 200) {
-      print('Data sent successfully');
-    } else {
-      print('Failed to send data');
-    }
-  } catch (error) {
-    print('Error sending data: $error');
   }
 }
 
@@ -55,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> _input = [''];
   final TextEditingController _text = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  List<Book> _books = [];
 
   static const List<Widget> _listoptions = <Widget>[Text('Trash')];
 
@@ -63,20 +62,46 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
     });
   }
-
-/*   void _addToList(String value) {
-    setState(() {
-      _input.add(value);
-    });
+    @override
+  void initState() {
+    super.initState();
+    //sendData();
+    //_fetchBooks();
   }
- */
+
+    // fetch from server
+    /*
+    Future<void> _fetchBooks() async {
+    final response = await http.get(Uri.http('192.168.68.106:3000', '/api/books'));
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(response.body);
+      setState(() {
+      _books = json.map((item) => Book.fromJson(item)).toList();
+      });
+    } else {
+      throw Exception('Failed to load books');
+    }
+  }*/
+
+  Future<void> sendData(String value) async {
+    final response = await http.post(Uri.http('192.168.68.106:3000', '/api/books'));
+    headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+    if (response.statusCode == 200) {
+      final List<dynamic> json = jsonDecode(response.body);
+      setState(() {
+      _books = json.map((item) => Book.fromJson(item)).toList();
+      });
+    } else {
+      throw Exception('Failed to load books');
+    }
+  }
 
   void _addToList(String value) {
     setState(() {
       _input.add(value);
-      expressData(value).catchError((error) {
-        print('Error calling expressData" $error');
-      });
+      sendData(value);
     });
   }
 
@@ -98,7 +123,18 @@ Widget build(BuildContext context) {
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       title: Text(widget.title),
     ),
-    body: Container(
+    body: 
+    ListView.builder(
+        itemCount: _books.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(_books[index].title),
+            subtitle: Text(_books[index].author),
+          );
+        },
+      ),
+    );
+    /*Container(
       margin: EdgeInsets.all(100),
       child: Form(key: _key, child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +146,8 @@ Widget build(BuildContext context) {
           ),
           SizedBox(height: 20.0),
           Column(
-            children: List.generate(
+            children: 
+            List.generate(
               _input.length, (index) {
                 final buttontext = _input[index];
                 return Column(
@@ -188,6 +225,6 @@ Widget build(BuildContext context) {
         ],
       ),
     ),
-  );
+  );*/
 }
 }
