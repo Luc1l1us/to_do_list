@@ -37,7 +37,7 @@ class loginscreen extends StatelessWidget {
             SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                sendData(_username.text, _password.text, '', '');
+                registeruser(_username.text, _password.text, '', '');
               },
               child: Text('Register'))
           ]),

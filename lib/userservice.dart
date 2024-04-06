@@ -4,8 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'model/usermodel.dart';
 
 List<User> _users = [];
-
-Future<void> sendData(String username, password, email, value) async {
+//register
+Future<void> registeruser(String username, password, email, value) async {
   final Map<String, dynamic> postData = {
     'username': username,
     'password': password,
@@ -26,8 +26,9 @@ Future<void> sendData(String username, password, email, value) async {
   }
 }
 
+//fetch users from server
 Future<void> _fetchUsers() async {
-    final response = await http.get(Uri.http(dotenv.env['DB_URL']!, '/api/users'));
+    final response = await http.get(Uri.http(dotenv.env['DB_URL']!, '/api/fetchusers'));
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
       _users = json.map((item) => User.fromJson(item)).toList();
@@ -36,11 +37,12 @@ Future<void> _fetchUsers() async {
     }
 }
 
+//update document with valueway
 Future<void> updateData(String value) async {
   final Map<String, dynamic> postData = {
     'value': value
   };
-  final response = await http.post(Uri.http(dotenv.env['DB_URL']!, '/api/registeruser'),
+  final response = await http.post(Uri.http(dotenv.env['DB_URL']!, '/api/update'),
   headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { MongoClient, ServerApiVersion } = require('mongodb')
+const bcrypt = require('bcrypt');
 const app = require('./app');
 const PORT = process.env.PORT;
 const uri = process.env.MONGO_DB;
@@ -19,17 +20,11 @@ app.get('/', (req, res) => {
     res.send('Hello, Express!')
 });
 
-const books = [
-    {id: 1, title: 'Alice in Wonderland', author: 'Lewis Carrol'},
-    {id: 2, title: 'Around the World in eighty days', author: 'Jules Verne'},
-    {id: 3, title: 'Utopia', author: 'Sir Thomas Moor'},
-]
-
 /*app.get('/api/books', (req, res) => {
     res.json(books)
 })*/
 
-app.get('/api/users', async (req, res) => {
+app.get('/api/fetchusers', async (req, res) => {
     try {
     let collection = await database.collection('user');
     let results = await collection.find({}).toArray();
@@ -43,15 +38,17 @@ app.get('/api/users', async (req, res) => {
 app.post('/api/registeruser', async (req, res) => {
     try {
         const { username, password, email, value } = req.body;
-        console.log('Received value from Flutter app: ', username, password, email, value);
+        const hashedpass = await bcrypt.hash(password, 10);
+        const user = new user({username, email, password})
+        console.log('Received value from Flutter app: ', username, hashedpass, email, value);
         res.status(201).send('Data received successfully');
         
         await client.connect();
         const document = {
             'username': username,
-            'password': password,
+            'password': hashedpass,
             'email': email,
-            'value': value,
+            'tasks': value,
         }
 
         const result = await collection.insertOne(document);
@@ -73,15 +70,15 @@ app.post('/api/update', async (req, res) => {
         res.status(201).send('Data received successfully');
         
         await client.connect();
-        const document = {
-            'username': username,
-            'password': password,
-            'email': email,
-            'value': value,
+        const filter = {
+            username: 'LMAO'
+        }
+        const updatedocument = {
+            $push: { 'tasks': value }
         }
 
-        const result = await collection.insertOne(document);
-        console.log(`Document inserted with _id: ${result.insertedId}`);
+        const result = await collection.updateOne(filter, updatedocument);
+        console.log(`added ${value} to ${result} document!`);
         //await collection.deleteMany(document);
         //console.log(`Documents deleted!`);
     } catch (error) {

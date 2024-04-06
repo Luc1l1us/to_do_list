@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addToList(String value) {
     setState(() {
       _input.add(value);
-      //sendData(value);
+      updateData(value);
     });
   }
 

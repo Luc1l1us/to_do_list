@@ -16,7 +16,7 @@ class User {
         username: json['username'],
         password: json['password'],
         email: json['email'],
-        tasks: json['task'],
+        tasks: json['tasks'],
       );
     }
 }
