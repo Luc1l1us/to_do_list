@@ -3,8 +3,7 @@
     A to-do-list 
 
 ### Tech Stack
-```
-Flutter
-Express.js
-MongoDB
-```
+
+    Flutter
+    Express.js
+    MongoDB
