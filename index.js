@@ -40,7 +40,33 @@ app.get('/api/users', async (req, res) => {
     }
 }) 
 
-app.post('/api/sendvalue', async (req, res) => {
+app.post('/api/registeruser', async (req, res) => {
+    try {
+        const { username, password, email, value } = req.body;
+        console.log('Received value from Flutter app: ', username, password, email, value);
+        res.status(201).send('Data received successfully');
+        
+        await client.connect();
+        const document = {
+            'username': username,
+            'password': password,
+            'email': email,
+            'value': value,
+        }
+
+        const result = await collection.insertOne(document);
+        console.log(`Document inserted with _id: ${result.insertedId}`);
+        //await collection.deleteMany(document);
+        //console.log(`Documents deleted!`);
+    } catch (error) {
+        console.error('Error processing data:', error);
+        res.status(500).send('Internal Server Error!');
+    } finally {
+        await client.close();
+    }
+});
+
+app.post('/api/update', async (req, res) => {
     try {
         const { value } = req.body;
         console.log('Received value from Flutter app: ', value);
@@ -48,7 +74,10 @@ app.post('/api/sendvalue', async (req, res) => {
         
         await client.connect();
         const document = {
-            'task': value,
+            'username': username,
+            'password': password,
+            'email': email,
+            'value': value,
         }
 
         const result = await collection.insertOne(document);

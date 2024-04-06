@@ -1,29 +1,13 @@
 // ignore_for_file: prefer_const_constructors
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_list/loginscreen.dart';
+import './model/usermodel.dart';
+import 'userservice.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
-}
-
-//Model
-class User {
-  //final int id;
-  //final String title;
- // final String author;
- final String tasks;
-
-  User({required this.tasks});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      //id: json['id'],
-      //title: json['title'],
-      //author: json['author'],
-      tasks: json['task'],
-    );
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -67,46 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
     @override
   void initState() {
     super.initState();
-    _fetchUsers();
-  }
-
-    // fetch from server
-    
-    Future<void> _fetchUsers() async {
-    final response = await http.get(Uri.http('192.168.68.106:3000', '/api/users'));
-    if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body);
-      setState(() {
-      _users = json.map((item) => User.fromJson(item)).toList();
-      });
-    } else {
-      throw Exception('Failed to load books');
-    }
-  }
-
-  //send to server
-  Future<void> sendData(String value) async {
-    final Map<String, dynamic> postData = {
-      'value': value
-    };
-    final response = await http.post(Uri.http('192.168.68.106:3000', '/api/sendvalue'),
-    headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(postData),
-    );
-
-    if (response.statusCode == 201) {
-      print('Data posted successfully');
-    } else {
-      throw Exception('Failed to post values');
-    }
+    //_fetchUsers();
   }
 
   void _addToList(String value) {
     setState(() {
       _input.add(value);
-      sendData(value);
+      //sendData(value);
     });
   }
 
@@ -129,6 +80,7 @@ Widget build(BuildContext context) {
       title: Text(widget.title),
     ),
     body: 
+    // Use this to fetch data from DB
     /*ListView.builder(
         itemCount: _books.length,
         itemBuilder: (BuildContext context, int index) {
@@ -191,6 +143,7 @@ Widget build(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FloatingActionButton.extended(
+          heroTag: 'reset_button',
           label: Text('Clear'),
           onPressed: () {
             setState(() {
@@ -202,6 +155,7 @@ Widget build(BuildContext context) {
         ),
         SizedBox(width: 20.0),
         FloatingActionButton.extended(
+          heroTag: 'add_button',
           label: Text('Add'),
           onPressed: () {
             _addToList(_text.text);
@@ -224,7 +178,7 @@ Widget build(BuildContext context) {
             selected: _selectedIndex == 1,
             onTap: () {
               _itemTapped(0);
-              Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => loginscreen(title: 'Login Screen')));
             },
           ),
         ],
