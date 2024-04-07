@@ -1,18 +1,8 @@
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb')
-const bcrypt = require('bcrypt');
 const app = require('./app');
 const PORT = process.env.PORT;
-const uri = process.env.MONGO_DB;
-
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-})
-
+const authroutes = require('./routes/auth');
+const client = require('./db')
 const database = client.db('to-do-list');
 const collection = database.collection('user');
 
@@ -35,6 +25,9 @@ app.get('/api/fetchusers', async (req, res) => {
     }
 }) 
 
+app.use('/auth', authroutes);
+
+/*
 app.post('/api/registeruser', async (req, res) => {
     try {
         const { username, password, email, value } = req.body;
@@ -61,8 +54,9 @@ app.post('/api/registeruser', async (req, res) => {
     } finally {
         await client.close();
     }
-});
+});*/
 
+/*
 app.post('/api/update', async (req, res) => {
     try {
         const { value } = req.body;
@@ -87,7 +81,7 @@ app.post('/api/update', async (req, res) => {
     } finally {
         await client.close();
     }
-});
+});*/
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is listening on Port http://192.168.68.106:${PORT}`);

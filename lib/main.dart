@@ -2,6 +2,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/loginscreen.dart';
+import 'package:to_do_list/registerscreen.dart';
 import './model/usermodel.dart';
 import 'userservice.dart';
 
@@ -174,7 +175,15 @@ Widget build(BuildContext context) {
             child: Text('Menu'),
           ),
           ListTile(
-            title: Text('Trash'),
+            title: Text('Register'), //replacement for now
+            selected: _selectedIndex == 1,
+            onTap: () {
+              _itemTapped(0);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => registerscreen(title: 'Register Screen')));
+            },
+          ),
+          ListTile(
+            title: Text('Login'), //replacement for now
             selected: _selectedIndex == 1,
             onTap: () {
               _itemTapped(0);

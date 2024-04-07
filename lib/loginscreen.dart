@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:to_do_list/userservice.dart';
-
 import 'main.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,7 @@ class loginscreen extends StatelessWidget {
   loginscreen({
     Key? key, required this.title }) : super(key: key);
     final String title;
-    final TextEditingController _username = TextEditingController();
+    final TextEditingController _email = TextEditingController();
     final TextEditingController _password = TextEditingController();
 
 
@@ -23,9 +22,9 @@ class loginscreen extends StatelessWidget {
           margin: EdgeInsets.all(50),
           child: Column(children: <Widget>[
             TextFormField(
-              controller: _username,
+              controller: _email,
               decoration: InputDecoration(
-                labelText: 'Input Username:'
+                labelText: 'Input Email:'
               ),
             ),
             TextFormField(
@@ -37,9 +36,9 @@ class loginscreen extends StatelessWidget {
             SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                registeruser(_username.text, _password.text, '', '');
+                loginuser(_email.text, _password.text);
               },
-              child: Text('Register'))
+              child: Text('Login'))
           ]),
         )
       ),
