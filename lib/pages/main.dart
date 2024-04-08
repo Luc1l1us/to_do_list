@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:to_do_list/loginscreen.dart';
-import 'package:to_do_list/registerscreen.dart';
-import './model/usermodel.dart';
-import 'userservice.dart';
+import 'loginscreen.dart';
+import 'registerscreen.dart';
+import '../model/usermodel.dart';
+import '../userservice.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');

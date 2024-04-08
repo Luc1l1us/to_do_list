@@ -14,6 +14,8 @@ app.get('/', (req, res) => {
     res.json(books)
 })*/
 
+//backend should be the one to fetch data from the user's email, 
+//and send it as json to flutter
 app.get('/api/fetchusers', async (req, res) => {
     try {
     let collection = await database.collection('user');
