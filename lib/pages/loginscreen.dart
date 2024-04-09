@@ -2,6 +2,8 @@
 import 'package:to_do_list/userservice.dart';
 import 'main.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 class loginscreen extends StatelessWidget {
   loginscreen({
@@ -35,8 +37,13 @@ class loginscreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextButton(
-              onPressed: () {
-                loginuser(_email.text, _password.text);
+              onPressed: () async {
+                try {
+                  await loginuser(_email.text, _password.text);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'To-Do')));
+                } catch (err) {
+                  Fluttertoast.showToast(msg: 'Eror: $err');
+                }
               },
               child: Text('Login'))
           ]),

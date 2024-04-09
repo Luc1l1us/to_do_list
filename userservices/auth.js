@@ -1,4 +1,5 @@
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion } = require('mongodb')
 const bcrypt = require('bcrypt');
 const app = require('../app');
@@ -79,11 +80,12 @@ const login = async (req, res) => {
 
         // logic to compare passwords
         const passmatch = await comparePass(password, filteruser.password);
-        if (passmatch) {
-            return res.status(200).send('Authentication Successful!');
-        } else {
+        if (!passmatch) {
             return res.status(401).send('Authentication unsuccessful!');
         }
+        const token = jwt.sign({userID: user._id}, process.env.SECRET_KEY, {expiresIn: '1 hour'});
+        res.json({token});
+        
     } catch (err) {
         console.error('Error processing data:', err);
         res.status(500).send('Internal Server Error!');

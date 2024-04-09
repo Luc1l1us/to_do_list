@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:to_do_list/pages/main.dart';
+import 'package:to_do_list/pages/registerscreen.dart';
 import 'model/usermodel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -53,13 +56,13 @@ Future<void> loginuser(email, String password) async {
 }
 
 //fetch users from server
-Future<void> _fetchUsers() async {
+Future<void> fetchtasks() async {
     final response = await http.get(Uri.http(dotenv.env['DB_URL']!, '/api/fetchusers'));
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
       _users = json.map((item) => User.fromJson(item)).toList();
     } else {
-      throw Exception('Failed to load books');
+      throw Exception('Failed to load tasks');
     }
 }
 
