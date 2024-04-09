@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:to_do_list/pages/loginscreen.dart';
 import 'package:to_do_list/userservice.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'main.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,12 @@ class registerscreen extends StatelessWidget {
             SizedBox(height: 20),
             TextButton(
               onPressed: () {
+                try {
                 registeruser(_username.text, _password.text, '', '');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => loginscreen(title: 'Login')));
+                } catch (err) {
+                  Fluttertoast.showToast(msg: 'Eror: $err');
+                }
               },
               child: Text('Register'))
           ]),

@@ -2,7 +2,10 @@ require('dotenv').config();
 const app = require('./app');
 const PORT = process.env.PORT;
 const authroutes = require('./routes/auth');
-const client = require('./db')
+const userroutes = require('./routes/user');
+const client = require('./db');
+const jwt = require('jsonwebtoken');
+const { JsonWebTokenError } = require('jsonwebtoken');
 const database = client.db('to-do-list');
 const collection = database.collection('user');
 
@@ -18,8 +21,11 @@ app.get('/', (req, res) => {
 //and send it as json to flutter
 app.get('/api/fetchusers', async (req, res) => {
     try {
-    let collection = await database.collection('user');
-    let results = await collection.find({}).toArray();
+        const token = req.headers.authorization?.split(' ')[1];
+        const decodedtoken = jwt.verify(token, process.env.SECRET_KEY);
+        const useremail = decodedtoken.useremail;
+        let collection = await database.collection('user');
+        let results = await collection.find({email: useremail}).toArray();
     res.json(results);
     } catch (error) {
         console.error('Error fetching data', error);
@@ -28,6 +34,8 @@ app.get('/api/fetchusers', async (req, res) => {
 }) 
 
 app.use('/auth', authroutes);
+
+app.use('/user', userroutes);
 
 /*
 app.post('/api/registeruser', async (req, res) => {

@@ -83,9 +83,9 @@ const login = async (req, res) => {
         if (!passmatch) {
             return res.status(401).send('Authentication unsuccessful!');
         }
-        const token = jwt.sign({userID: user._id}, process.env.SECRET_KEY, {expiresIn: '1 hour'});
+        const token = jwt.sign({userID: User._id}, process.env.SECRET_KEY, {expiresIn: '1 hour'});
         res.json({token});
-        
+
     } catch (err) {
         console.error('Error processing data:', err);
         res.status(500).send('Internal Server Error!');
