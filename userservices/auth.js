@@ -13,11 +13,12 @@ const register = async (req, res) => {
     try {
         const hashedpass = await bcrypt.hash(password, 10);
         const user = new User({username, email, password})
+        const tasks = [value];
         const document = {
             'username': username,
             'password': hashedpass,
             'email': email,
-            'tasks': value,
+            'tasks': tasks,
         }
 
         // to MongoDB, idk if this can be refactored
@@ -37,26 +38,29 @@ const register = async (req, res) => {
 
 const update = async (req, res) => {
     const { value } = req.body;
-    const token = req.headers.authorization?.split(' ')[0];
+    const token = req.headers.authorization?.split(' ')[1];
+    console.log(`token from express.js is`,token);
     try {
         //to MongoDB again
-        await client.connect;
+        await client.connect();
 
         const decodedtoken = jwt.verify(token, process.env.SECRET_KEY);
-        const useremail = decodedtoken.useremail;
+        const useremail = decodedtoken.email;
+
+        console.log('useremail:', useremail);        
+        console.log('Received value from Flutter app: ', value);
 
         if (!token) {
             return res.status(401).json({ message: 'Token not provided' });
         }
         
 
-        console.log('Received value from Flutter app: ', value);
         // use logic here to get the same username
         const filteruser = await collection.findOne({email: useremail});
         if (!filteruser) {
             return res.status(404).send('User not found!');
         }
-        const filter = {username: filteruser.username};
+        const filter = {email: filteruser.email};
         const updatedocument = { $push: { 'tasks': value } }
 
         const result = await collection.updateOne(filter, updatedocument);
@@ -102,7 +106,8 @@ const login = async (req, res) => {
         if (!passmatch) {
             return res.status(401).send('Authentication unsuccessful!');
         }
-        const token = jwt.sign({userID: User._id}, process.env.SECRET_KEY, {expiresIn: '1 hour'});
+
+        const token = jwt.sign({userID: User._id, email: email}, process.env.SECRET_KEY, {expiresIn: '1 hour'});
         res.json({token});
 
     } catch (err) {

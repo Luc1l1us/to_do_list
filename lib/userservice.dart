@@ -89,9 +89,13 @@ Future<void> updateData(String value, String token) async {
       body: jsonEncode(postData),
   );
 
+  print("Body: $token");
+  print("Body: $postData");
+
   if (response.statusCode == 200) {
     print('Data posted successfully');
   } else {
-  throw Exception('Failed to post values');
+    print('Failed to post values. Response: ${response.body}');
+    throw Exception('Failed to post values');
   }
 }

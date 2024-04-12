@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: loginscreen(title: 'Login')//const MyHomePage(title: 'To-Do'),
+      home: registerscreen(title: 'Login')//const MyHomePage(title: 'To-Do'),
     );
   }
 }
