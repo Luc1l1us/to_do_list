@@ -6,6 +6,7 @@ import 'package:to_do_list/pages/main.dart';
 import 'package:to_do_list/pages/registerscreen.dart';
 import 'model/usermodel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<User> _users = [];
 //register
@@ -46,6 +47,10 @@ Future<void> loginuser(email, String password) async {
 
   if (response.statusCode == 200) {
     Fluttertoast.showToast(msg: 'Authentication Successful!');
+    final token = jsonDecode(response.body)['token'];
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    globaltoken = token;
   } else if (response.statusCode == 400) {
     throw Exception('User not registered!');
   } else if (response.statusCode == 401) {
@@ -57,7 +62,12 @@ Future<void> loginuser(email, String password) async {
 
 //fetch users from server
 Future<void> fetchtasks() async {
-    final response = await http.get(Uri.http(dotenv.env['DB_URL']!, '/api/fetchusers'));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final response = await http.get(Uri.http(dotenv.env['DB_URL']!, '/api/fetchusers'),
+    headers: {
+      'Authorization': 'Bearer $token',
+    });
     if (response.statusCode == 200) {
       final List<dynamic> json = jsonDecode(response.body);
       _users = json.map((item) => User.fromJson(item)).toList();
@@ -67,20 +77,21 @@ Future<void> fetchtasks() async {
 }
 
 //update document with valueway
-Future<void> updateData(String value) async {
+Future<void> updateData(String value, String token) async {
   final Map<String, dynamic> postData = {
     'value': value
   };
   final response = await http.post(Uri.http(dotenv.env['DB_URL']!, '/auth/update'),
   headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(postData),
   );
 
-  if (response.statusCode == 201) {
+  if (response.statusCode == 200) {
     print('Data posted successfully');
   } else {
-    throw Exception('Failed to post values');
+  throw Exception('Failed to post values');
   }
 }

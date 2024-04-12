@@ -1,13 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'loginscreen.dart';
 import 'registerscreen.dart';
 import '../model/usermodel.dart';
 import '../userservice.dart';
 
+String globaltoken = '';
 void main() async {
   await dotenv.load(fileName: '.env');
+  await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: registerscreen(title: 'Register')//const MyHomePage(title: 'To-Do'),
+      home: loginscreen(title: 'Login')//const MyHomePage(title: 'To-Do'),
     );
   }
 }
@@ -56,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addToList(String value) {
     setState(() {
       _input.add(value);
-      updateData(value);
+      updateData(value, globaltoken);
     });
   }
 

@@ -42,7 +42,7 @@ class loginscreen extends StatelessWidget {
                   await loginuser(_email.text, _password.text);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: 'To-Do')));
                 } catch (err) {
-                  Fluttertoast.showToast(msg: 'Eror: $err');
+                  Fluttertoast.showToast(msg: 'Error: $err');
                 }
               },
               child: Text('Login'))

@@ -24,14 +24,21 @@ app.get('/api/fetchusers', async (req, res) => {
         const token = req.headers.authorization?.split(' ')[1];
         const decodedtoken = jwt.verify(token, process.env.SECRET_KEY);
         const useremail = decodedtoken.useremail;
+        // connect to mongoDB
+        await client.connect();
         let collection = await database.collection('user');
         let results = await collection.find({email: useremail}).toArray();
-    res.json(results);
+        res.json(results);
     } catch (error) {
         console.error('Error fetching data', error);
         res.status(500).send('Internal Server Error!');
     }
 }) 
+
+app.use((req, res, next) => {
+    console.log(`Endpoint: ${req.originalUrl}, Status: ${res.statusCode}`)
+    next();
+});
 
 app.use('/auth', authroutes);
 
@@ -94,5 +101,5 @@ app.post('/api/update', async (req, res) => {
 });*/
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is listening on Port http://192.168.68.106:${PORT}`);
+    console.log(`Server is listening on Port http://${process.env.DB_URL}`);
 });

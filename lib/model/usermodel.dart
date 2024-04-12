@@ -2,13 +2,13 @@ class User {
   final String username;
   final String password;
   final String email;
-  final String tasks;
+  final String? tasks;
   
     User({
       required this.username, 
       required this.password, 
       required this.email, 
-      required this.tasks 
+      this.tasks 
       });
   
     factory User.fromJson(Map<String, dynamic> json) {

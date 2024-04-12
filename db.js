@@ -11,4 +11,13 @@ const client = new MongoClient(uri, {
     }
 })
 
+client.connect()
+    .then(() => {
+        console.log('Connected to MongoDB!');
+    })
+    .catch(err => {
+        console.error('Error: ', err);
+        process.exit(1);
+    })
+
 module.exports = client;

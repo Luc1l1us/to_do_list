@@ -37,17 +37,36 @@ const register = async (req, res) => {
 
 const update = async (req, res) => {
     const { value } = req.body;
+    const token = req.headers.authorization?.split(' ')[0];
     try {
-        console.log('Received value from Flutter app: ', value);
-        // use logic here to get the same username
-        const filteruser = await collection.findOne({email});
-        filter = { username: username} //hardcodeeedd
-        const updatedocument = { $push: { 'tasks': value } }
-
         //to MongoDB again
         await client.connect;
+
+        const decodedtoken = jwt.verify(token, process.env.SECRET_KEY);
+        const useremail = decodedtoken.useremail;
+
+        if (!token) {
+            return res.status(401).json({ message: 'Token not provided' });
+        }
+        
+
+        console.log('Received value from Flutter app: ', value);
+        // use logic here to get the same username
+        const filteruser = await collection.findOne({email: useremail});
+        if (!filteruser) {
+            return res.status(404).send('User not found!');
+        }
+        const filter = {username: filteruser.username};
+        const updatedocument = { $push: { 'tasks': value } }
+
         const result = await collection.updateOne(filter, updatedocument);
         console.log(`added ${value} to ${result} document!`);
+        res.status(200).send('Data send successfully!');
+        /* const document = {
+
+        } 
+        await collection.deleteMany(document);
+        console.log(`Documents deleted!`); */
 
         } catch (err) {
             console.error('Error processing data:', err);
