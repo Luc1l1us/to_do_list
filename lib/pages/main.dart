@@ -107,14 +107,17 @@ Widget build(BuildContext context) {
           Column(
             children: 
             List.generate(
-              _input.length, (index) {
-                final buttontext = _input[index];
+              _input.length, (index) { //_input
+                final buttontexts = _users[index]; //_input
+                final buttontext = _input[index]; //_input
+
+                print(buttontexts);
                 return Column(
                   children: [
                     ElevatedButton(
                       key: Key('$index'),
                       onPressed: () {
-                        _openTask(index);
+                        _openTask(index); 
                       },
                       style: ButtonStyle(
                         minimumSize: MaterialStatePropertyAll(Size(0,0))
@@ -123,7 +126,7 @@ Widget build(BuildContext context) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
                           Flexible(
-                            child:Text(buttontext)
+                            child:Text(buttontext) 
                           ),
                           IconButton(
                             onPressed: () {
