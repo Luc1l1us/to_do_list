@@ -16,7 +16,7 @@ class User {
         username: json['username'],
         password: json['password'],
         email: json['email'],
-        tasks: json['tasks'],
+        tasks: json['tasks'] != null ? (json['tasks'] as List<dynamic>).join(', ') : null,
       );
     }
 }

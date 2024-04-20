@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'loginscreen.dart';
 import 'registerscreen.dart';
-import '../model/usermodel.dart';
 import '../userservice.dart';
 
 String globaltoken = '';
+List<String> _tasks = [];
+
 void main() async {
   await dotenv.load(fileName: '.env');
   await SharedPreferences.getInstance();
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: registerscreen(title: 'Login')//const MyHomePage(title: 'To-Do'),
+      home: loginscreen(title: 'Login')//const MyHomePage(title: 'To-Do'),
     );
   }
 }
@@ -41,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> _input = [''];
   final TextEditingController _text = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  List<User> _users = [];
 
   static const List<Widget> _listoptions = <Widget>[Text('Trash')];
 
@@ -107,11 +107,11 @@ Widget build(BuildContext context) {
           Column(
             children: 
             List.generate(
-              _input.length, (index) { //_input
+              _users.length, (index) { //_input
                 final buttontexts = _users[index]; //_input
                 final buttontext = _input[index]; //_input
 
-                print(buttontexts);
+                final user = _users[index];
                 return Column(
                   children: [
                     ElevatedButton(
@@ -126,7 +126,7 @@ Widget build(BuildContext context) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
                           Flexible(
-                            child:Text(buttontext) 
+                            child:Text(user.tasks!) 
                           ),
                           IconButton(
                             onPressed: () {

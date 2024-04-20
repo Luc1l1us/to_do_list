@@ -8,7 +8,6 @@ import 'model/usermodel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List<User> _users = [];
 //register
 Future<void> registeruser(String username, password, email, value) async {
   final Map<String, dynamic> postData = {
@@ -69,8 +68,10 @@ Future<void> fetchtasks() async {
       'Authorization': 'Bearer $token',
     });
     if (response.statusCode == 200) {
-      final List<dynamic> json = jsonDecode(response.body);
-      _users = json.map((item) => User.fromJson(item)).toList();
+      final Map<String, dynamic> map = jsonDecode(response.body);
+      final user = User.fromJson(map);
+      final List<User>_users = [user];
+      print(user.tasks);
     } else {
       throw Exception('Failed to load tasks');
     }

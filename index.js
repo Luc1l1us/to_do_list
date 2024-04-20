@@ -23,12 +23,17 @@ app.get('/api/fetchusers', async (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
         const decodedtoken = jwt.verify(token, process.env.SECRET_KEY);
-        const useremail = decodedtoken.useremail;
+        const useremail = decodedtoken.email;
         // connect to mongoDB
         await client.connect();
         let collection = await database.collection('user');
-        let results = await collection.find({email: useremail}).toArray();
-        res.json(results);
+        let results = await collection.findOne({email: useremail});
+        if (results) {
+            res.json(results);
+            console.log(results);
+        } else {
+            res.status(404).send('User not found!');
+        }
     } catch (error) {
         console.error('Error fetching data', error);
         res.status(500).send('Internal Server Error!');
@@ -100,6 +105,6 @@ app.post('/api/update', async (req, res) => {
     }
 });*/
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
     console.log(`Server is listening on Port http://${process.env.DB_URL}`);
 });
