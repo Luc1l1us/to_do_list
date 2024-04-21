@@ -70,8 +70,7 @@ Future<void> fetchtasks() async {
     if (response.statusCode == 200) {
       final Map<String, dynamic> map = jsonDecode(response.body);
       final user = User.fromJson(map);
-      final List<User>_users = [user];
-      print(user.tasks);
+      tasks = user.tasks!;
     } else {
       throw Exception('Failed to load tasks');
     }

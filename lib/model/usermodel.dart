@@ -2,7 +2,7 @@ class User {
   final String username;
   final String password;
   final String email;
-  final String? tasks;
+  final List<String>? tasks;
   
     User({
       required this.username, 
@@ -12,11 +12,15 @@ class User {
       });
   
     factory User.fromJson(Map<String, dynamic> json) {
+      List<String>? tasks;
+      if (json['tasks'] != null) {
+    tasks = List<String>.from(json['tasks']);
+    }
       return User(
         username: json['username'],
         password: json['password'],
         email: json['email'],
-        tasks: json['tasks'] != null ? (json['tasks'] as List<dynamic>).join(', ') : null,
+        tasks: tasks,
       );
     }
 }

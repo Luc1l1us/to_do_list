@@ -2,17 +2,18 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:to_do_list/model/usermodel.dart';
 import 'loginscreen.dart';
 import 'registerscreen.dart';
 import '../userservice.dart';
 
 String globaltoken = '';
-List<String> _tasks = [];
-
+List<String> tasks = [];
 void main() async {
   await dotenv.load(fileName: '.env');
   await SharedPreferences.getInstance();
   runApp(const MyApp());
+  fetchtasks();
 }
 
 class MyApp extends StatelessWidget {
@@ -60,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _input.add(value);
       updateData(value, globaltoken);
+      fetchtasks();
     });
   }
 
@@ -107,11 +109,8 @@ Widget build(BuildContext context) {
           Column(
             children: 
             List.generate(
-              _users.length, (index) { //_input
-                final buttontexts = _users[index]; //_input
-                final buttontext = _input[index]; //_input
-
-                final user = _users[index];
+              tasks.length, (index) { //_input
+                final buttontexts = tasks[index]; //_input
                 return Column(
                   children: [
                     ElevatedButton(
@@ -126,7 +125,7 @@ Widget build(BuildContext context) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:[
                           Flexible(
-                            child:Text(user.tasks!) 
+                            child:Text(buttontexts)
                           ),
                           IconButton(
                             onPressed: () {
